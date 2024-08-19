@@ -1,0 +1,14 @@
+{
+  "name": "ytsearch2tg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "fwd.js",
+  "scripts": {
+    "start": "node fwd.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
