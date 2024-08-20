@@ -68,31 +68,34 @@ bot.on('message', (msg) => {
     if (text.startsWith('📋 Start') || text.startsWith('/start')) {
         bot.sendMessage(chatId, `${locale.welcome}\n\n${locale.about}`, menuKeyboard);
         return;
-    } else if (text.startsWith('❓ Help')) {
+    }
+
+    if (text.startsWith('❓ Help')) {
         bot.sendMessage(chatId, locale.help, menuKeyboard);
         return;
-    } else {
-        let query = text.trim();
-        let numResults = chatId < 0 ? 1 : 10; // default number of results
+    } 
+    
+    let query = text.trim();
+    let numResults = chatId < 0 ? 1 : 10; // default number of results
 
-        // Check if the query ends with =N, which specifies the number of results
-        const match = query.match(/=(\d+)$/);
-        if (match) {
-            numResults = parseInt(match[1], 10);
-            query = query.slice(0, match.index).trim(); // remove the =N from the query
-        }
-
-        getListDesc(query).then(videos => {
-            if (videos) {
-                videos.slice(0, numResults).forEach(v => {
-                    const messageText = `${v.title}\n${translateTimePhrase(v.publishDateTime, timeTranslations) || ''}\nСсылка на само видео:\n${v.url}\n\nВозможные ссылки для скачивания:\n${getDownloadLinksFromTips(v.url).join('\n')}\nВозможные зеркала для онлайн просмотра${getMirrorLinks(v.url).join('\n')}\n\n${locale.shortDesc}`;
-                    bot.sendMessage(chatId, messageText, menuKeyboard);
-                });
-            } else {
-                bot.sendMessage(chatId, locale.error, menuKeyboard);
-            }
-        });
+    // Check if the query ends with =N, which specifies the number of results
+    const match = query.match(/=(\d+)$/);
+    if (match) {
+        numResults = parseInt(match[1], 10);
+        query = query.slice(0, match.index).trim(); // remove the =N from the query
     }
+
+    getListDesc(query).then(videos => {
+        if (videos) {
+            videos.slice(0, numResults).forEach(v => {
+                const messageText = `${v.title}\n${translateTimePhrase(v.publishDateTime, timeTranslations) || ''}\nСсылка на само видео:\n${v.url}\n\nВозможные ссылки для скачивания:\n${getDownloadLinksFromTips(v.url).join('\n')}\nВозможные зеркала для онлайн просмотра${getMirrorLinks(v.url).join('\n')}\n\n${locale.shortDesc}`;
+                bot.sendMessage(chatId, messageText, menuKeyboard);
+            });
+        } else {
+            bot.sendMessage(chatId, locale.error, menuKeyboard);
+        }
+    });
+
 });
 
 // Handle inline queries
